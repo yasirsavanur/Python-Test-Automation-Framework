@@ -1,106 +1,147 @@
-# Python-Test-Automation-Framework
+# Orbit QA — Python Test Automation Framework
 
-# Description
+[![Quality gates](https://github.com/yasirsavanur/Python-Test-Automation-Framework/actions/workflows/quality-gates.yml/badge.svg)](https://github.com/yasirsavanur/Python-Test-Automation-Framework/actions/workflows/quality-gates.yml)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Selenium 4](https://img.shields.io/badge/Selenium-4-43B02A?logo=selenium&logoColor=white)](https://www.selenium.dev/)
 
-Test Automation Framework using selenium and Python with the below features:
+A production-minded UI and API automation framework built with Python, pytest, and Selenium 4. It demonstrates maintainable page objects, data-driven testing, cross-browser execution, Grid support, failure diagnostics, contract testing, and CI quality gates—without depending on an unstable public demo site.
 
-- Framework is based on page object model.
-- Reporting using Allure report.
-- Reading locators from JSON file.
-- Reading test data from JSON file.
-- Integrated with TestRail to update test cases status after each run.
-- Framework can integrate with CodeShip.
+The repository includes **Orbit QA Store**, a small deterministic commerce system used as the test target. Clone the project and the whole suite is ready to run locally.
 
-# Install dependences
+## What this project demonstrates
 
-- Install the depended packages in `requirements.txt` using `pip install -r requirements.txt`
+- Selenium 4 sessions for Chrome, Firefox, or a remote Grid
+- explicit waits and stable `data-testid` selectors—no fixed sleeps or implicit waits
+- focused page objects that model user intent instead of test mechanics
+- pytest fixtures, custom CLI options, markers, and readable parametrized cases
+- UI journeys and API contract tests against the same system under test
+- automatic screenshot and page-source capture when a browser test fails
+- self-contained HTML, JUnit XML, and coverage reports
+- GitHub Actions matrices across Python 3.10/3.12 and Chrome/Firefox
+- Ruff linting and an enforced 80% branch-coverage threshold
 
-# Create new test case
+## Framework shape
 
-In order to create a new test case using the **Framework**, you have to follow the below steps:
+```text
+src/automation_framework/
+├── api_client.py          # JSON API test client
+├── config.py              # validated runtime settings
+├── driver_factory.py      # local and remote WebDriver sessions
+└── pages/                 # intent-focused page objects
+demo_app/                  # deterministic UI + API test target
+tests/
+├── api/                   # service contract checks
+├── data/                  # versioned, non-secret test data
+├── support/               # ephemeral demo server
+├── ui/                    # browser journeys
+└── unit/                  # fast framework checks
+```
 
-- In **locators module**, create a new locator for the element you would like to use, as below:
+The fixture layer owns infrastructure and lifecycle; tests own assertions; page objects own browser interactions. That separation keeps failures clear and makes a new environment or page straightforward to add.
 
+## Quick start
 
-        [{
-            "pageName": "HomePage",
-            "name": "link_login",
-            "locateUsing": "xpath",
-            "locator": "//a[contains(text(),'Log In')]"
-        }]
+Prerequisites: Python 3.10+ and Chrome or Firefox.
 
-- In **test data module**, add the test data needed for your test case, as below:
+```bash
+python -m venv .venv
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+python -m pip install --upgrade pip
+python -m pip install -e ".[test]"
 
-        {
-            "environment": "https://learn.letskodeit.com/",
-            "browser": "firefox",
-            "email": "test@email.com",
-            "password": "abcabc"
-        }
+pytest -m smoke --browser chrome
+```
 
-* If the element exist in more than one page (**Navigation element**), use **navigation module** to create a script for that navigation bar and add your navigation action to that element, as below:
+Selenium Manager resolves the matching local driver, so no machine-specific driver path is required. Tests start the bundled application on an available local port and shut it down after the session.
 
-        def goToLoginPage(self):
-            self.elementClick(*self.locator(self.homePage_locators, 'link_login'))
+## Useful test runs
 
-* If the element exists in only one page, go to **page module** and create a new script for that page e.g: `login_page.py` and add all the actions in that page, as below:
+```bash
+# Fast feedback, no browser
+pytest -m "unit or api"
 
-        def login(self, email, password):
-            self.sendKeys(email, *self.locator(self.loginPage_locators, 'input_email'))
-            self.sendKeys(password, *self.locator(self.loginPage_locators, 'input_password'))
-            self.elementClick(*self.locator(self.loginPage_locators, 'btn_login'))
+# Full Chrome suite with a self-contained report
+pytest --browser chrome --html=artifacts/report.html --self-contained-html
 
-* Then, in **test module**, create a new script for your test case(s) e.g: `test_login.py` and add your test case, as below:
+# Firefox regression suite with JUnit output
+pytest -m regression --browser firefox --junitxml=artifacts/regression.xml
 
-        @allure.story('epic_1') # story of the test case
-        @allure.severity(allure.severity_level.MINOR) # severity of the test case
-        @pytestrail.case('C48') # test case id on test rail
-        def test_login_successfully(self):
+# Watch the test execute
+pytest -m smoke --browser chrome --headed
 
-            with allure.step('Navigate to login page'): # name of the test step
-                self.homeNavigation.goToLoginPage()
-                self.ts.markFinal(self.loginPage.isAt, "navigation to login page failed") # check if the navigation to login page occurs successfully
+# Run against a compatible remote environment
+pytest -m ui --browser chrome \
+  --grid-url http://localhost:4444/wd/hub \
+  --base-url https://your-accessible-test-environment.example
+```
 
-            with allure.step('Login'): # name of the test step
-                self.loginPage.login(email=td.testData("email"), password=td.testData("password"))
-                self.ts.markFinal(self.dashboardPage.isAt, "login failed") # check if login successfully
+### Runtime options
 
-**Notes:**
+| Option | Default | Purpose |
+|---|---:|---|
+| `--browser` | `chrome` | Select `chrome` or `firefox` |
+| `--headed` | off | Display a local browser instead of using headless mode |
+| `--grid-url` | local | Send the session to Selenium Grid or a cloud provider |
+| `--base-url` | bundled app | Target another compatible environment |
+| `--timeout` | `10` | Set the explicit-wait timeout in seconds |
+| `--artifacts-dir` | `artifacts` | Choose where failure evidence is written |
 
-- use `@allure.story('[epic name]')` decorator before each test case to define the related epic / story.
-- use `@allure.severity(allure.severity_level.[severity])` decorator before each test case to define the severity of the test case Minor/Major/Critical/Blocker.
-- use `@pytestrail.case('[test case id on testrail]')` decorator before each test case to defione the related test case id on test rail to make the script update run status on test rail.
+## Example test
 
-# Run the test case
+```python
+@pytest.mark.ui
+@pytest.mark.smoke
+def test_user_can_complete_checkout(driver, base_url, framework_config):
+    login = LoginPage(driver, base_url, framework_config.timeout)
+    inventory = InventoryPage(driver, base_url, framework_config.timeout)
 
-In order to run the test case after creation, use on of the below commands:
+    login.load()
+    login.sign_in("qa.engineer@example.com", "quality-first")
+    inventory.wait_until_loaded()
+    inventory.add_product("Grid Compass")
 
-- To run the test case and create allure report but without update the status run on TestRail:
+    assert inventory.cart_count == 1
+```
 
-`py.test --alluredir=allure_report tests/test_login.py`
+The complete journey lives in [`tests/ui/test_checkout.py`](tests/ui/test_checkout.py).
 
-`allure serve allure_report`
+## Failure diagnostics
 
-- To run the test case, create allure report and update the status of run on TestRail:
+If a browser test reaches its assertion and fails, the `driver` fixture writes two files to `artifacts/`:
 
-`py.test --alluredir=allure_report tests/test_login.py --testrail`
+- a PNG screenshot showing the rendered state
+- the matching HTML source for DOM-level investigation
 
-`allure serve allure_report`
+CI uploads these alongside the HTML and JUnit reports even when the test job fails.
 
-**Note:**
+## Continuous integration
 
-- There are other options of run that you can search for them, as running all the test cases for specific epic/story or with specific severity
+The workflow separates fast framework feedback from browser compatibility:
 
-# Integration with TestRail
+| Job | Coverage |
+|---|---|
+| Framework | Ruff plus unit/API tests on Python 3.10 and 3.12 |
+| Selenium / Chrome | complete suite, HTML/JUnit reports, branch coverage |
+| Selenium / Firefox | complete suite, HTML/JUnit reports, branch coverage |
 
-In order to setup the integration with TestRail, edit `testrail.cfg` with your testrail domain and credentials, as below:
+This keeps the signal specific: a Python compatibility problem, a browser-specific problem, and a product regression appear as different checks.
 
-        [API]
-        url = https://[your testrail domain].testrail.io
-        email = [testrail email]
-        password = [testrail password]
+## Extending it
 
-        [TESTRUN]
-        project_id = [project id]
+1. Add a page object under `src/automation_framework/pages/` with selectors and user-level actions.
+2. Put reusable, non-secret cases under `tests/data/` and load them with `load_cases`.
+3. Mark tests by intent (`smoke`, `regression`, `ui`, `api`, or `unit`).
+4. Keep credentials outside the repository and inject them through your CI secret store.
+5. Add provider-specific capabilities to `DriverFactory._options()` when connecting a cloud Grid.
 
-========================
+## Design choices
+
+- **A bundled test target:** public demo sites change or disappear; this repository remains repeatable and portfolio-friendly.
+- **Explicit waits:** each synchronization point describes the condition the test actually needs.
+- **Native Selenium Manager:** local setup stays portable and avoids checked-in browser binaries.
+- **Small abstractions:** page objects remove repetition while Selenium exceptions retain useful stack traces.
+- **No live TestRail coupling:** results are emitted in portable JUnit XML so CI or a test-management adapter can consume them without putting account configuration in the framework.
+
+## License
+
+MIT
