@@ -1,0 +1,20 @@
+{
+  "valid": {
+    "email": "qa.engineer@example.com",
+    "password": "quality-first"
+  },
+  "invalid": [
+    {
+      "id": "unknown-user",
+      "email": "unknown@example.com",
+      "password": "quality-first",
+      "message": "We couldn't sign you in with those credentials."
+    },
+    {
+      "id": "wrong-password",
+      "email": "qa.engineer@example.com",
+      "password": "not-the-password",
+      "message": "We couldn't sign you in with those credentials."
+    }
+  ]
+}

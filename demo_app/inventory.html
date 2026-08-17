@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Catalogue | Orbit QA Store</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="inventory">
+  <header class="shell topbar">
+    <a class="brand" href="inventory.html"><span class="brand-mark">O</span> Orbit QA Store</a>
+    <a class="cart-link" data-testid="cart-link" href="cart.html">Cart <span class="cart-count" data-testid="cart-count">0</span></a>
+  </header>
+  <main class="shell">
+    <section class="page-header">
+      <div><p class="eyebrow">Curated toolkit</p><h1 data-testid="inventory-heading">Automation catalogue</h1></div>
+    </section>
+    <div class="toolbar">
+      <label class="field" for="search"><span>Filter products</span><input class="search" id="search" data-testid="product-search" placeholder="Try ‘grid’"></label>
+    </div>
+    <section class="product-grid" aria-label="Products">
+      <article class="product-card" data-testid="product-card" data-product-name="Grid Compass" data-product-price="49">
+        <div class="product-icon">GC</div><div><h2>Grid Compass</h2><p>Cross-browser diagnostics for every remote session.</p></div>
+        <div class="product-footer"><span class="price">$49.00</span><button class="button" data-testid="add-product">Add to cart</button></div>
+      </article>
+      <article class="product-card" data-testid="product-card" data-product-name="Selector Studio" data-product-price="39">
+        <div class="product-icon">SS</div><div><h2>Selector Studio</h2><p>Durable locator patterns designed for maintainable tests.</p></div>
+        <div class="product-footer"><span class="price">$39.00</span><button class="button" data-testid="add-product">Add to cart</button></div>
+      </article>
+      <article class="product-card" data-testid="product-card" data-product-name="Trace Vault" data-product-price="59">
+        <div class="product-icon">TV</div><div><h2>Trace Vault</h2><p>Failure evidence packaged for quick root-cause analysis.</p></div>
+        <div class="product-footer"><span class="price">$59.00</span><button class="button" data-testid="add-product">Add to cart</button></div>
+      </article>
+    </section>
+  </main>
+  <div class="notice" data-testid="notice" role="status" hidden></div>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,9 +1,0 @@
-pytest
-selenium
-ipython
-openpyxl
-allure-pytest
-allure-python-commons
-nose
-pytest-testrail
-urllib3==1.22

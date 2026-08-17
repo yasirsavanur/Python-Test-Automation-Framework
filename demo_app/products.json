@@ -1,0 +1,5 @@
+[
+  {"id": "grid-compass", "name": "Grid Compass", "price": 49.0, "currency": "USD"},
+  {"id": "selector-studio", "name": "Selector Studio", "price": 39.0, "currency": "USD"},
+  {"id": "trace-vault", "name": "Trace Vault", "price": 59.0, "currency": "USD"}
+]

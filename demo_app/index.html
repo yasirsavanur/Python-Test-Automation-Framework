@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign in | Orbit QA Store</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="login">
+  <header class="shell topbar">
+    <a class="brand" href="index.html"><span class="brand-mark">O</span> Orbit QA Store</a>
+    <span class="eyebrow">Deterministic test target</span>
+  </header>
+  <main class="shell login-layout">
+    <section>
+      <p class="eyebrow">Automation without flaky dependencies</p>
+      <h1>Test the journey, not the internet.</h1>
+      <p class="lede">A deliberately compact commerce flow built into the repository. It gives UI and API tests stable contracts while keeping every interaction realistic.</p>
+      <div class="signal-row">
+        <span class="signal">Stable data-testid selectors</span>
+        <span class="signal">Accessible forms</span>
+        <span class="signal">API contract</span>
+      </div>
+    </section>
+    <section class="panel" aria-labelledby="login-heading">
+      <h2 id="login-heading" data-testid="login-heading">Welcome back</h2>
+      <p class="hint">Sign in to inspect the automation catalogue.</p>
+      <form data-testid="login-form">
+        <div class="field">
+          <label for="email">Email address</label>
+          <input id="email" data-testid="email" name="email" type="email" autocomplete="username" required>
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" data-testid="password" name="password" type="password" autocomplete="current-password" required>
+        </div>
+        <p class="error" data-testid="login-error" role="alert"></p>
+        <button class="button full" data-testid="login-submit" type="submit">Sign in</button>
+      </form>
+      <div class="credentials"><strong>Demo user</strong><br>qa.engineer@example.com<br>quality-first</div>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

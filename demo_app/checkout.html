@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Checkout | Orbit QA Store</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="checkout">
+  <header class="shell topbar"><a class="brand" href="inventory.html"><span class="brand-mark">O</span> Orbit QA Store</a></header>
+  <main class="shell content-narrow">
+    <section class="page-header"><div><p class="eyebrow">Final step</p><h1 data-testid="checkout-heading">Checkout</h1></div></section>
+    <form class="panel" data-testid="checkout-form">
+      <div class="field"><label for="first-name">First name</label><input id="first-name" data-testid="first-name" required></div>
+      <div class="field"><label for="last-name">Last name</label><input id="last-name" data-testid="last-name" required></div>
+      <div class="field"><label for="postcode">Postcode</label><input id="postcode" data-testid="postcode" required></div>
+      <button class="button full" data-testid="complete-order" type="submit">Complete order</button>
+    </form>
+    <section class="success" data-testid="success-panel" hidden>
+      <div class="success-mark">✓</div><h2 data-testid="success-heading">Order confirmed</h2>
+      <p>Your reference is <strong data-testid="order-number">QA-2026-001</strong>.</p>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
